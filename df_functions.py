@@ -34,6 +34,24 @@ def format_data(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
     return df
 
 
+#Function that splits dataframe into smaller chunks, calls format_data on each and then re-assemble the dataframe
+def split_and_reformat(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
+    split = len(dataframe)//3
+
+    df_split1 = dataframe.iloc[:split]
+    df_split1 = format_data(df_split1, column)
+
+    df_split2 = dataframe.iloc[split:split*2]
+    df_split2 = format_data(df_split2, column) 
+
+    df_split3 = dataframe.iloc[-split*2:]
+    df_split3 = format_data(df_split3, column) 
+
+    df_concat = pd.concat([df_split1, df_split2, df_split3])
+    df_concat.reset_index(inplace=True)
+    df_concat = df_concat.drop(columns=['index'])
+    return df_concat
+
 #Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
 # 5 and 6: spammers, 7: data scraper
 #print(cleaned_logs[7])
