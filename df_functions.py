@@ -11,9 +11,9 @@ def read_csv_file(csv_file):
     return data
 
 
-#Returns a list of users
+#Returns a list of users - probably not necessary 
 def extract_users(dataframe):
-    return list(dataframe['users'])
+    return list(dataframe['users'].unique())
 
 
 #Returns a dataframe containing only timestamp, URL or timestamp+sessionID column. 
@@ -47,21 +47,23 @@ def reqs_per_5mins(dataframe):
 
 #Function that splits dataframe into smaller chunks, calls format_data on each and then re-assemble the dataframe
 def split_and_reformat(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
-    split = len(dataframe)//3
 
-    df_split1 = dataframe.iloc[:split]
-    df_split1 = format_data(df_split1, column)
+    new_df = dataframe.sort_values(by=['timestamp'])
 
-    df_split2 = dataframe.iloc[split:split*2]
-    df_split2 = format_data(df_split2, column) 
+    reqs_per_5 = reqs_per_5mins(dataframe)
+    lower = 0
+    df_concat = pd.DataFrame()
 
-    df_split3 = dataframe.iloc[-split*2:]
-    df_split3 = format_data(df_split3, column) 
+    for i in range(0, len(reqs_per_5)):
+        higher = reqs_per_5[i]
+        df_split = new_df.iloc[lower:higher]
+        df_split = format_data(df_split, column)
+        df_concat = pd.concat([df_concat, df_split])
+        lower = reqs_per_5[i]
 
-    df_concat = pd.concat([df_split1, df_split2, df_split3])
     df_concat.reset_index(inplace=True)
     df_concat = df_concat.drop(columns=['index'])
-    return df_concat
+    return df_concat    
 
 #Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
 # 5 and 6: spammers, 7: data scraper
