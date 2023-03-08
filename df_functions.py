@@ -33,6 +33,17 @@ def format_data(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
     df = df.rename(columns={'index': 'users'})    
     return df
 
+#Returns a list of number of requests every 5 minutes
+def reqs_per_5mins(dataframe):
+    new_df = pd.DataFrame()
+    new_df['timestamp'] = pd.to_datetime(dataframe['timestamp'], unit='ms')
+    new_df['val'] = 1
+
+    new_df = new_df.set_index('timestamp')
+    new_df = new_df.resample('5min').sum()
+
+    return new_df['val'].to_list()
+
 
 #Function that splits dataframe into smaller chunks, calls format_data on each and then re-assemble the dataframe
 def split_and_reformat(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
