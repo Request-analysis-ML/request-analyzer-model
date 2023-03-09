@@ -105,7 +105,7 @@ def longestConsecutive(string):
     return recursive(list, list[0], 1, 1, 1)
 
 
-#Function that calculates length of the longest subsequence of consecutive requests DOES NOT WORK
+#Function that calculates length of the longest subsequence of consecutive requests DOES NOT WORK 
 # Need shorter sequences of requests
 def recursive(list, last_word, longest_streak, count, i):
     if (list[i] == ''  and i < len(list)):
@@ -118,3 +118,33 @@ def recursive(list, last_word, longest_streak, count, i):
     if(i == len(list)):
         return longest_streak
     return recursive(list, list[i], longest_streak, count, i+1)
+
+
+def count_timestamps_interval(dataframe):
+    interval_df = dataframe
+    return interval_df
+
+
+
+
+"""
+for all users:
+    send all rows into "distributer function" from og dataframe where user = user.
+    Group this users information in 5 minute sequences (we define a sequence as 5 minutes) as aggregate(?).
+    For all 5min sequences:
+        send appropriate date to all analysing functions
+        send this information back here (how will this look?)
+    4. construct this back into one "long row of features"
+    5. send back
+
+
+
+Analyse with Isolation Forest
+
+
+
+
+
+
+
+"""
