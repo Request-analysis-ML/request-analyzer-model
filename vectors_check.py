@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import string
 
 #the two functions below are just to assemble and simulate a batch of request from one user
 def read_csv_file(csv_file):
@@ -15,21 +16,19 @@ def group_data(dataframe):
 def format_for_url(dataframe):
     return dataframe.drop(columns = ['timestamp', 'sessionID', 'expiring'])
 
-def clean_reqlogs(dataframe):
 
-    df_cleaned = dataframe
-    request_logs = df_cleaned['URL']
-    cleaned_logs = []
 
-    for i in range(0, len(request_logs)):
-        sequence = re.sub('\d', '', request_logs[i])
-        sequence = re.sub(',', ' ', sequence)
-        sequence = sequence.lower()
-        cleaned_logs.append(sequence)
+#this function takes "one row" from the df. This will be an instance irl, i.e. one row
+def bajs(dataframe):
+   pattern = r"\/\d+"
+   urls = dataframe['URL'].split(', ')
+   for i, url in enumerate(urls):
+     urls[i] = re.sub(pattern, "", url)
+   dataframe['URL'] = ', '.join(urls)
+   return urls
 
-    df_cleaned ['request_logs'] = cleaned_logs
-    df_cleaned = df_cleaned.drop('URL', axis=1)
 
-    return df_cleaned  
+
+
 
 
