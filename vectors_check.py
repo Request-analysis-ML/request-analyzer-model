@@ -19,7 +19,7 @@ def format_for_url(dataframe):
 
 
 #this function takes "one row" from the df. This will be an instance irl, i.e. one row
-def bajs(dataframe):
+def clean_url_log(dataframe):
    pattern = r"\/\d+"
    urls = dataframe['URL'].split(', ')
    for i, url in enumerate(urls):
