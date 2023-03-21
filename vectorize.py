@@ -4,7 +4,7 @@ class vectorizer:
 
     def __init__(self, vectorizer = {'count', 'tfidf'}):
 
-        if (vectorizer == 'tfid'):
+        if (vectorizer == 'tfidf'):
             self.vectorizer = TfidfVectorizer()
         else:
             self.vectorizer = CountVectorizer()            
