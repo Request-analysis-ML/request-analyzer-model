@@ -13,7 +13,7 @@ def read_csv_file(csv_file):
 
 #Returns a list of users - probably not necessary 
 def extract_users(dataframe):
-    return list(dataframe['users'].unique())
+    return list(dataframe['userID'].unique())
 
 
 #Returns a dataframe containing only timestamp, URL or timestamp+sessionID column. 
