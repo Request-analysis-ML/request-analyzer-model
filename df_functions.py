@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 import numpy as np
-from itertools import groupby
+import math
 
 
 #Function to read a csv file
@@ -16,6 +16,80 @@ def extract_users(dataframe):
     return list(dataframe['userID'].unique())
 
 
+#This function will only be used for training data
+def split_user_df(dataframe, user):
+
+    #Dataframe containing all requests made by chosen user
+    user_data = dataframe.loc[dataframe['userID'] == user]
+    number_of_reqs = user_data.shape[0]
+   
+    partitions = number_of_reqs/50
+    partitions = math.ceil(partitions)
+
+    #Splits the data frame into smaller chunks of ~50 requests
+    return  np.array_split(user_data, partitions)
+  
+
+#Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
+# 5 and 6: spammers, 7: data scraper
+#print(cleaned_logs[7])
+def clean_reqlogs(dataframe):
+
+    df_cleaned = dataframe.copy()
+    request_logs = df_cleaned['URL']
+
+    cleaned_logs = []
+
+    for i in range(0, len(request_logs)):
+        sequence = re.sub('\d', '', request_logs[i])
+        sequence = re.sub(',', ' ', sequence)
+        sequence = sequence.lower()
+        cleaned_logs.append(sequence)
+
+    df_cleaned ['request_logs'] = cleaned_logs
+    df_cleaned = df_cleaned.drop('URL', axis=1)
+
+    return df_cleaned  
+
+#Function to calculate the variance of the values in the different columns
+#Returns the dataframe with a column with variances added
+def calculate_variance(dataframe, list):
+    dataframe['var_reqs'] = dataframe[list].apply(lambda row: row.var(), axis=1)
+    return dataframe
+
+
+#Function to calculate unique requests
+def count_unique_reqs(dataframe, list):
+    dataframe['unique_reqs'] = np.count_nonzero(dataframe[list], axis=1)
+    return dataframe
+
+
+
+def count_timestamps_interval(dataframe):
+    interval_df = dataframe
+    return interval_df
+
+
+
+
+"""
+for all users:
+    send all rows into "distributer function" from og dataframe where user = user.
+    Group this users information in 5 minute sequences (we define a sequence as 5 minutes) as aggregate(?).
+    For all 5min sequences:
+        send appropriate date to all analysing functions
+        send this information back here (how will this look?)
+    4. construct this back into one "long row of features"
+    5. send back
+
+
+
+Analyse with Isolation Forest
+
+
+"""
+
+#OLD FUNCTIONS
 #Returns a dataframe containing only timestamp, URL or timestamp+sessionID column. 
 #The data is grouped based on userID
 def format_data(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
@@ -63,88 +137,4 @@ def split_and_reformat(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
 
     df_concat.reset_index(inplace=True)
     df_concat = df_concat.drop(columns=['index'])
-    return df_concat    
-
-#Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
-# 5 and 6: spammers, 7: data scraper
-#print(cleaned_logs[7])
-def clean_reqlogs(dataframe):
-
-    df_cleaned = dataframe
-    request_logs = df_cleaned['URL']
-
-    cleaned_logs = []
-
-    for i in range(0, len(request_logs)):
-        sequence = re.sub('\d', '', request_logs[i])
-        sequence = re.sub(',', ' ', sequence)
-        sequence = sequence.lower()
-        cleaned_logs.append(sequence)
-
-    df_cleaned ['request_logs'] = cleaned_logs
-    df_cleaned = df_cleaned.drop('URL', axis=1)
-
-    return df_cleaned  
-
-#Function to calculate the variance of the values in the different columns
-#Returns the dataframe with a column with variances added
-def calculate_variance(dataframe, list):
-    dataframe['var_reqs'] = dataframe[list].apply(lambda row: row.var(), axis=1)
-    return dataframe
-
-
-#Function to calculate unique requests
-def count_unique_reqs(dataframe, list):
-    dataframe['unique_reqs'] = np.count_nonzero(dataframe[list], axis=1)
-    return dataframe
-
-
-#Function that calculates length of the longest subsequence of consecutive requests DOES NOT WORK
-def longestConsecutive(string):
-    list = re.split(' ', string) 
-    return recursive(list, list[0], 1, 1, 1)
-
-
-#Function that calculates length of the longest subsequence of consecutive requests DOES NOT WORK 
-# Need shorter sequences of requests
-def recursive(list, last_word, longest_streak, count, i):
-    if (list[i] == ''  and i < len(list)):
-        return recursive(list, list[i], longest_streak, count, i+1)
-    if (list[i] == last_word):
-        count = count + 1
-    elif (count > longest_streak):
-        longest_streak = count 
-        count = 1     
-    if(i == len(list)):
-        return longest_streak
-    return recursive(list, list[i], longest_streak, count, i+1)
-
-
-def count_timestamps_interval(dataframe):
-    interval_df = dataframe
-    return interval_df
-
-
-
-
-"""
-for all users:
-    send all rows into "distributer function" from og dataframe where user = user.
-    Group this users information in 5 minute sequences (we define a sequence as 5 minutes) as aggregate(?).
-    For all 5min sequences:
-        send appropriate date to all analysing functions
-        send this information back here (how will this look?)
-    4. construct this back into one "long row of features"
-    5. send back
-
-
-
-Analyse with Isolation Forest
-
-
-
-
-
-
-
-"""
+    return df_concat
