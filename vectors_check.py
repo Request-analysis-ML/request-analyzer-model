@@ -96,20 +96,28 @@ def get_vectorized_logs(vectorizer, dataframe, column_name):
     return count_vectorized_logs
 
 
-#vectorizer=count/tfidf?, dataframe=vilken df, column_name=request_logs
-def get_variance_score(vectorizer, dataframe, column_name):
+
+# This function selects vectorizer (count or tfidf), apply it to the column 'column_name' (request_logs).
+# Then it calls the fun 'test_var_instance' and returns this list with count vectorized scores.
+# Params; vectorizer: count or tfidf. dataframe: what df? column_name: name of the col to count (will be request_logs)
+def get_variance_score(vectorizer, dataframe, column_name, i):
     
     if(vectorizer == 'count'):
         vectorizer = CountVectorizer()
         x = vectorizer.fit_transform(dataframe[column_name])
-        return x
+        #return x
+        return test_var_instance(vectorizer=vectorizer, int=i, idk=x)
+
+    else:
+        print('smthn wrong')
 
 
 
-        
-        #count_vectorized_logs = get_vectorized_logs(vectorizer=vectorizer, dataframe=dataframe, column_name='request_logs')
-        #print('count')
-    #else:
-        #print('tfidf')    
+#This function is used to test an instance in the df. This resturn the list with count vectorized scores.
+def test_var_instance(vectorizer, int, idk):
+    vector_instance= idk[int] 
+    df_vectorized = pd.DataFrame(vector_instance.T.todense(), index=vectorizer.get_feature_names_out(), columns=["vect_scores"])
+    return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
+
 
    
