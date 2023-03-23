@@ -41,7 +41,7 @@ def format_for_url(dataframe):
 
 
 
-#this function takes "one row" from the df. This will be an instance irl, i.e. one row
+#delete
 """def clean_url_log(dataframe):
    
    pattern = r"\/\d+"
@@ -71,6 +71,7 @@ def clean_reqlogs(dataframe):
     return df_cleaned  
 
 
+#dont use
 def get_vectorizer(vectorizer_type):
     if (vectorizer_type == 'c'):
         return CountVectorizer()
