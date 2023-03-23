@@ -71,6 +71,12 @@ def clean_reqlogs(dataframe):
     return df_cleaned  
 
 
+def get_vectorizer(vectorizer_type):
+    if (vectorizer_type == 'c'):
+        return CountVectorizer()
+    else:
+        return TfidfVectorizer()
+
 
 """
 Tf-idf vectorizer.
@@ -83,4 +89,27 @@ def tfidf_vectorizer(dataframe):
    req_log_tf = tfidf_vect.fit_transform(dataframe['request_logs'])
    return req_log_tf 
 
+#dont use
+def get_vectorized_logs(vectorizer, dataframe, column_name):
+    count_vect = vectorizer
+    count_vectorized_logs = count_vect.fit_transform(dataframe[column_name])
+    return count_vectorized_logs
 
+
+#vectorizer=count/tfidf?, dataframe=vilken df, column_name=request_logs
+def get_variance_score(vectorizer, dataframe, column_name):
+    
+    if(vectorizer == 'count'):
+        vectorizer = CountVectorizer()
+        x = vectorizer.fit_transform(dataframe[column_name])
+        return x
+
+
+
+        
+        #count_vectorized_logs = get_vectorized_logs(vectorizer=vectorizer, dataframe=dataframe, column_name='request_logs')
+        #print('count')
+    #else:
+        #print('tfidf')    
+
+   
