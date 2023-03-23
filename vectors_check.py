@@ -118,7 +118,7 @@ def get_variance_score(vectorizer, dataframe, column_name, i):
 def test_var_instance(vectorizer, int, idk):
     vector_instance= idk[int] 
     df_vectorized = pd.DataFrame(vector_instance.T.todense(), index=vectorizer.get_feature_names_out(), columns=["vect_scores"])
-    return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
+    #return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
+    list = df_vectorized.sort_values(by=["vect_scores"], ascending=False)
+    return list.var()
 
-
-   
