@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 #the two functions is just to assemble and simulate a batch of request from one user
 def read_csv_file(csv_file):
@@ -15,6 +16,22 @@ def group_data(dataframe):
 
 #returns number of sessionIDs for a user during time intervall
 def count_sessionIDs(dataframe):
-    list = dataframe['timestamp']
-    timestamp_list = list.split(", ")
-    return(len(set(timestamp_list)))
+    list = dataframe['sessionID']
+    if (not isinstance(list, int)):
+        timestamp_list = list.split(" ")
+        return(len(set(timestamp_list)))
+    return 0
+
+
+#Function that checks the average number of sessionIDs within 5 minute windows for the given dataframe  
+def avg_tokens_5mins(dataframe):
+
+    df = dataframe.copy()
+    df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+    data_session = pd.DataFrame()
+    data_session['sessionID'] = df.set_index('timestamp').resample('5T')["sessionID"].sum()
+    sessionIDs = []
+    
+    for i in range (0, data_session.shape[0]):
+        sessionIDs.append(count_sessionIDs(data_session.iloc[i]))
+    return np.average(sessionIDs) 
