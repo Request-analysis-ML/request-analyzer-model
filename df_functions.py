@@ -35,8 +35,12 @@ def split_user_df(dataframe, user):
 #print(cleaned_logs[7])
 def clean_reqlogs(dataframe):
 
-    df_cleaned = dataframe.copy()
-    request_logs = df_cleaned['URL']
+    df = dataframe[['userID','URL']].copy()
+    df = df.set_index(['userID']).rename_axis(None)
+    df = df.groupby(level=0).agg(','.join)
+
+    #df_cleaned = dataframe.copy()
+    request_logs = df['URL']
 
     cleaned_logs = []
 
@@ -46,10 +50,10 @@ def clean_reqlogs(dataframe):
         sequence = sequence.lower()
         cleaned_logs.append(sequence)
 
-    df_cleaned ['request_logs'] = cleaned_logs
-    df_cleaned = df_cleaned.drop('URL', axis=1)
+    df['request_logs'] = cleaned_logs
+    df = df.drop('URL', axis=1)
 
-    return df_cleaned  
+    return df  
 
 #Function to calculate the variance of the values in the different columns
 #Returns the dataframe with a column with variances added
