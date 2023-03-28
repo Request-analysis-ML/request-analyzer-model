@@ -23,7 +23,7 @@ def calc_avg_timediff(userdata):
     
     return avg_ms/1000
 
-#
+
 def longest_consec(dataframe):
     #df = dataframe[['userID','URL']].copy()
     #df = df.set_index(['userID']).rename_axis(None)
@@ -51,10 +51,7 @@ def recursive_consec(list, last_word, longest_streak, count, i):
     return recursive_consec(list, list[i], longest_streak, count, i+1)
 
 
-# This function selects vectorizer (count or tfidf), apply it to the column 'column_name' (request_logs).
-# Then it calls the fun 'test_var_instance' which returns a list with count vectorized scores.
-# It then returns the variance on the list
-# Params; vectorizer: count or tfidf. dataframe: what df? column_name: name of the col to count (will be request_logs)
+
 def get_variance_score(dataframe, vectorizer):
     df = dataframe.copy()
     cleaned = clean_reqlogs(df)
@@ -62,42 +59,43 @@ def get_variance_score(dataframe, vectorizer):
     x = vectorizer.transform(cleaned['request_logs'])
 
     df_vectorized = pd.DataFrame(x.todense(), columns=vectorizer.get_feature_names_out())
-    #return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
-    #list = df_vectorized.sort_values(by=["vect_scores"], ascending=False)
     return df_vectorized.iloc[0].var()
 
 
-#This function is used to test an instance in the df. This resturn the list with count vectorized scores.
-def test_var_instance(vectorizer, int, idk):
-    vector_instance= idk[int] 
-    df_vectorized = pd.DataFrame(vector_instance.T.todense(), index=vectorizer.get_feature_names_out(), columns=["vect_scores"])
-    #return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
-    list = df_vectorized.sort_values(by=["vect_scores"], ascending=False)
-    return list.var()
 
 
+#Function that checks the average number of sessionIDs within 5 minute windows for the given dataframe  
+def avg_tokens_5mins(dataframe):
 
-#OLD FUNCTION
-def get_variance_score_old(dataframe, vectorizer = {'count', 'tfidf'}):
     df = dataframe.copy()
-    cleaned = clean_reqlogs(df)
+    df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+    data_session = pd.DataFrame()
+    data_session['sessionID'] = df.set_index('timestamp').resample('5T')["sessionID"].sum()
+    sessionIDs = []
+    
+    for i in range (0, data_session.shape[0]):
+        sessionIDs.append(count_sessionIDs(data_session.iloc[i]))
+    return np.average(sessionIDs) 
 
-    if(vectorizer == 'count'):
-        vectorizer = CountVectorizer()
-        x = vectorizer.fit_transform(cleaned['request_logs'])
-        #return x
-        #return test_var_instance(vectorizer=vectorizer, int=i, idk=x)
 
-    elif(vectorizer == 'tfidf'):
-        vectorizer = TfidfVectorizer(stop_words = 'english')            #probably don't need stopwords
-        x = vectorizer.fit_transform(cleaned['request_logs'])
-        #return test_var_instance(vectorizer=vectorizer, int=i, idk=x)
+    
+#returns number of sessionIDs for a user during time intervall
+def count_sessionIDs(dataframe):
+    list = dataframe['sessionID']
+    if (not isinstance(list, int)):
+        timestamp_list = list.split(" ")
+        return(len(set(timestamp_list)))
+    return 0
 
-    else:
-        print('something fishy')
-        return 0
 
-    df_vectorized = pd.DataFrame(x.todense(), columns= vectorizer.get_feature_names_out() )
-    #return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
-    #list = df_vectorized.sort_values(by=["vect_scores"], ascending=False)
-    return df_vectorized.var()
+
+#Function to calculate unique requests (might not use)
+def count_unique_reqs(dataframe, list):
+    dataframe['unique_reqs'] = np.count_nonzero(dataframe[list], axis=1)
+    return dataframe
+
+
+
+
+
+

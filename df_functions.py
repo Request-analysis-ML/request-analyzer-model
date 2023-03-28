@@ -31,15 +31,12 @@ def split_user_df(dataframe, user):
   
 
 #Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
-# 5 and 6: spammers, 7: data scraper
-#print(cleaned_logs[7])
 def clean_reqlogs(dataframe):
 
     df = dataframe[['userID','URL']].copy()
     df = df.set_index(['userID']).rename_axis(None)
     df = df.groupby(level=0).agg(','.join)
 
-    #df_cleaned = dataframe.copy()
     request_logs = df['URL']
 
     cleaned_logs = []
@@ -55,23 +52,12 @@ def clean_reqlogs(dataframe):
 
     return df  
 
-#Function to calculate the variance of the values in the different columns
-#Returns the dataframe with a column with variances added
-def calculate_variance(dataframe, list):
-    dataframe['var_reqs'] = dataframe[list].apply(lambda row: row.var(), axis=1)
-    return dataframe
-
-
-#Function to calculate unique requests
-def count_unique_reqs(dataframe, list):
-    dataframe['unique_reqs'] = np.count_nonzero(dataframe[list], axis=1)
-    return dataframe
 
 
 
-def count_timestamps_interval(dataframe):
-    interval_df = dataframe
-    return interval_df
+
+
+
 
 
 
