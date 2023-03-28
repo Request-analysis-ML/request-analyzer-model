@@ -25,10 +25,6 @@ def calc_avg_timediff(userdata):
 
 
 def longest_consec(dataframe):
-    #df = dataframe[['userID','URL']].copy()
-    #df = df.set_index(['userID']).rename_axis(None)
-    #df = df.groupby(level=0).agg(','.join)
-
     df = dataframe.copy()
     cleaned = clean_reqlogs(df)
     requests = cleaned['request_logs'].to_list()[0]
@@ -60,7 +56,6 @@ def get_variance_score(dataframe, vectorizer):
 
     df_vectorized = pd.DataFrame(x.todense(), columns=vectorizer.get_feature_names_out())
     return df_vectorized.iloc[0].var()
-
 
 
 

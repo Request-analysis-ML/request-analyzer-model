@@ -77,9 +77,9 @@ for all users:
 Analyse with Isolation Forest
 
 
-"""
 
-#OLD FUNCTIONS
+The code below are old methods which are not used
+
 #Returns a dataframe containing only timestamp, URL or timestamp+sessionID column. 
 #The data is grouped based on userID
 def format_data(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
@@ -128,3 +128,4 @@ def split_and_reformat(dataframe, column = {'timestamp', 'URL', 'sessionID'}):
     df_concat.reset_index(inplace=True)
     df_concat = df_concat.drop(columns=['index'])
     return df_concat
+"""
