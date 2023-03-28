@@ -4,6 +4,14 @@ from df_functions import clean_reqlogs
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
+#Function that returns a fitted CountVectorizer
+def create_vectorizer(dataframe):
+    df = dataframe.copy()
+    cleaned = clean_reqlogs(df)
+    vectorizer = CountVectorizer()
+    vectorizer = vectorizer.fit(cleaned['request_logs'])
+    return vectorizer
+
 #Function to check the time between the requests in each chunk and calculate the mean
 def calc_avg_timediff(userdata):
     #We get a list of all timestamps within the data chunk
@@ -47,7 +55,30 @@ def recursive_consec(list, last_word, longest_streak, count, i):
 # Then it calls the fun 'test_var_instance' which returns a list with count vectorized scores.
 # It then returns the variance on the list
 # Params; vectorizer: count or tfidf. dataframe: what df? column_name: name of the col to count (will be request_logs)
-def get_variance_score(dataframe, vectorizer = {'count', 'tfidf'}):
+def get_variance_score(dataframe, vectorizer):
+    df = dataframe.copy()
+    cleaned = clean_reqlogs(df)
+
+    x = vectorizer.transform(cleaned['request_logs'])
+
+    df_vectorized = pd.DataFrame(x.todense(), columns=vectorizer.get_feature_names_out())
+    #return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
+    #list = df_vectorized.sort_values(by=["vect_scores"], ascending=False)
+    return df_vectorized.iloc[0].var()
+
+
+#This function is used to test an instance in the df. This resturn the list with count vectorized scores.
+def test_var_instance(vectorizer, int, idk):
+    vector_instance= idk[int] 
+    df_vectorized = pd.DataFrame(vector_instance.T.todense(), index=vectorizer.get_feature_names_out(), columns=["vect_scores"])
+    #return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
+    list = df_vectorized.sort_values(by=["vect_scores"], ascending=False)
+    return list.var()
+
+
+
+#OLD FUNCTION
+def get_variance_score_old(dataframe, vectorizer = {'count', 'tfidf'}):
     df = dataframe.copy()
     cleaned = clean_reqlogs(df)
 
@@ -70,18 +101,3 @@ def get_variance_score(dataframe, vectorizer = {'count', 'tfidf'}):
     #return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
     #list = df_vectorized.sort_values(by=["vect_scores"], ascending=False)
     return df_vectorized.var()
-
-
-
-
-
-
-
-#This function is used to test an instance in the df. This resturn the list with count vectorized scores.
-def test_var_instance(vectorizer, int, idk):
-    vector_instance= idk[int] 
-    df_vectorized = pd.DataFrame(vector_instance.T.todense(), index=vectorizer.get_feature_names_out(), columns=["vect_scores"])
-    #return df_vectorized.sort_values(by=["vect_scores"], ascending=False)
-    list = df_vectorized.sort_values(by=["vect_scores"], ascending=False)
-    return list.var()
-
