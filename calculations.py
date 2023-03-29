@@ -53,9 +53,6 @@ def recursive_consec(list, last_word, longest_streak, count, i):
     return recursive_consec(list, list[i], longest_streak, count, i+1)
 
 
-
-
-
 """
 Function that returns a fitted CountVectorizer.
 The data is cleaned with clean_reqlogs before being fitted.
@@ -112,7 +109,12 @@ def avg_tokens_5mins(dataframe):
     return np.average(sessionIDs) 
 
 
-
+#Calculates time difference between first and last request in a sequence
+def sequence_time_length(dataframe):
+    timestamps = dataframe['timestamp'].to_list()
+    diff = (timestamps[len(timestamps)-1]) - timestamps[0]
+    diff = diff / 1000
+    return diff
 
 """
 Function that returns the number of unique sessionIDs.
