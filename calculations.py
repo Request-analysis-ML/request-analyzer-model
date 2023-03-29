@@ -4,15 +4,14 @@ from df_functions import clean_reqlogs
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
-#Function that returns a fitted CountVectorizer
-def create_vectorizer(dataframe):
-    df = dataframe.copy()
-    cleaned = clean_reqlogs(df)
-    vectorizer = CountVectorizer()
-    vectorizer = vectorizer.fit(cleaned['request_logs'])
-    return vectorizer
 
-#Function to check the time between the requests in each chunk and calculate the mean
+
+"""
+Function that checks the time between the requests in each chunk and calculates the mean.
+
+:param userdata: a chunk of data from a user 
+:returns: the average time between requests in seconds
+"""
 def calc_avg_timediff(userdata):
     #We get a list of all timestamps within the data chunk
     timestamps = userdata['timestamp'].tolist()
@@ -24,6 +23,13 @@ def calc_avg_timediff(userdata):
     return avg_ms/1000
 
 
+
+"""
+Function that calculates the longest streak of consecutive requests.
+
+:param dataframe: the dataframe with a chunk of data from a user to analyze
+:returns: the number of longest streak with consecutive requests
+"""
 def longest_consec(dataframe):
     df = dataframe.copy()
     cleaned = clean_reqlogs(df)
@@ -48,6 +54,33 @@ def recursive_consec(list, last_word, longest_streak, count, i):
 
 
 
+
+
+"""
+Function that returns a fitted CountVectorizer.
+The data is cleaned with clean_reqlogs before being fitted.
+
+:param dataframe: the dataframe to fit the vectorizer with
+:returns: a CountVectorizer
+"""
+def create_vectorizer(dataframe):
+    df = dataframe.copy()
+    cleaned = clean_reqlogs(df)
+    vectorizer = CountVectorizer()
+    vectorizer = vectorizer.fit(cleaned['request_logs'])
+    return vectorizer
+
+
+
+
+"""
+Function that returns the variance of different types of requests.
+The CountVectorizer have been applied to the request to perform a BoW operation.
+
+:param dataframe: the dataframe with a chunk of data from a user to analyze
+:param vectorizer: the vectorizer to apply to count the different requests
+:returns: the variance of the different requests
+"""
 def get_variance_score(dataframe, vectorizer):
     df = dataframe.copy()
     cleaned = clean_reqlogs(df)
@@ -59,7 +92,13 @@ def get_variance_score(dataframe, vectorizer):
 
 
 
-#Function that checks the average number of sessionIDs within 5 minute windows for the given dataframe  
+
+"""
+Function that checks the average number of sessionIDs within 5 minute windows.
+
+:param dataframe: the dataframe with a chunk of data from a user to analyze
+:returns: the average number of sessionIDs during a 5 min window
+"""
 def avg_tokens_5mins(dataframe):
 
     df = dataframe.copy()
@@ -73,7 +112,14 @@ def avg_tokens_5mins(dataframe):
     return np.average(sessionIDs) 
 
 
-    
+
+
+"""
+Function that returns the number of unique sessionIDs.
+
+:param dataframe: the dataframe wiht???
+:returns: the number of unique sessionIDs 
+"""  
 #returns number of sessionIDs for a user during time intervall
 def count_sessionIDs(dataframe):
     list = dataframe['sessionID']
