@@ -9,17 +9,15 @@ app = Flask(__name__)
 api = Api(app)
 
 parser = reqparse.RequestParser()
-parser.add_argument('request_freq', type=float)
-parser.add_argument('avg_tokens', type=float)
-parser.add_argument('longest_consec', type=int)
-parser.add_argument('var_score', type=float)
-parser.add_argument('sequence_time', type=float)
+parser.add_argument('data')
+
 
 class anomaly_detector(Resource):
     def post(self):
         args = parser.parse_args()
-        X = np.array(json.loads(args['avg_tokens', 'var_score']))
+        X = np.array(json.loads(args['data']))
         prediction = model.predict(X)
+        print(prediction)
         return jsonify(prediction.tolist())
     
 api.add_resource(anomaly_detector, '/spam_detect')

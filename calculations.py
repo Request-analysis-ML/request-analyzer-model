@@ -49,7 +49,7 @@ def recursive_consec(list, last_word, longest_streak, count, i):
         longest_streak = count 
         count = 1     
     if(i == len(list)-1):
-        return longest_streak
+        return float(longest_streak)
     return recursive_consec(list, list[i], longest_streak, count, i+1)
 
 
