@@ -16,3 +16,5 @@ pred = requests.post('http://127.0.0.1:5000/spam_detect', headers={'Content-Type
 # Make array from the list
 pred = np.array(pred)
 print(pred)
+
+print('Creating branch to test api stuff with')

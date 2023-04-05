@@ -23,7 +23,7 @@ def split_user_df(dataframe, user):
     user_data = dataframe.loc[dataframe['userID'] == user]
     number_of_reqs = user_data.shape[0]
    
-    partitions = number_of_reqs/15
+    partitions = number_of_reqs/50
     partitions = math.ceil(partitions)
 
     #Splits the data frame into smaller chunks of ~50 requests
