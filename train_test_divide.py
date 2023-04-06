@@ -4,7 +4,7 @@
 import pandas as pd
 
 #Function that extracts spammers and scrapers from original data set
-def extract_spammers_scrapers1(dataframe):
+def extract_spammers_scrapers(dataframe):
     return dataframe.loc[(dataframe['user'] == ' user-1003') | 
                          (dataframe['user'] == ' user-1004') | 
                          (dataframe['user'] == ' user-1005')]
