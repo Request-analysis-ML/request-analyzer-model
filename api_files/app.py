@@ -1,8 +1,6 @@
 from calculations import longest_consec, calc_avg_timediff, get_variance_score, avg_tokens_5mins, sequence_time_length
-from flask import Flask, jsonify, request
-from flask_restful import reqparse
+from flask import Flask, request
 import pickle
-import numpy as np
 import json
 import pandas as pd
 

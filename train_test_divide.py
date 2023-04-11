@@ -1,6 +1,5 @@
 """Python file containing methods for splitting the data into train and test data sets. """
 
-
 import pandas as pd
 
 #Function that extracts spammers and scrapers from original data set
