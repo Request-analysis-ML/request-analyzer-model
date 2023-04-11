@@ -1,65 +1,55 @@
-# app.py 2
-import numpy as np
-import pickle
-from flask import Flask, request, jsonify
-from flask_restful import Api, Resource, reqparse
+from flask import Flask, jsonify, request
+import pandas as pd
+
 
 app = Flask(__name__)
-api = Api(app)
 
-parser = reqparse.RequestParser()
-parser.add_argument('data')
 
-with open('classifier_model.pkl', 'rb') as f:
-    model = pickle.load(f)
+data_csv = pd.read_csv('csv_files/calculations.csv')
+data = data_csv.to_json(orient="records")
 
-class IrisClassifier(Resource):
-    def post(self):
-        args = parser.parse_args()
-        x = np.array(args['data'])
-        predictions = model.predict(x)
-        return jsonify(predictions.tolist())
+@app.route('/test')
+def test():
+    return 'This is a test.'
 
-api.add_resource(IrisClassifier, '/iris')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+
+
+@app.route('/', methods=['GET'])
+def welcome():
+    return 'Hello!' 
+
+
+@app.route('/data', methods=['GET'])
+def print_data():
+    return data
+
+
+@app.route('/numbers', methods=['POST'])
+def print_nr():
+    req_data = request.get_json()
+    num = req_data['numbers']
+    return num
 
 
 """
-class IrisClassifier(Resource):
-    def post(self):
-        args = parser.parse_args()
-        x = np.array(json.loads(args['data']))
-        predictions = model.predict(x)
-        return jsonify(predictions.tolist())
+@app.route('/predict', methods=['POST'])
 
-    
-api.add_resource(IrisClassifier, '/iris')
+def predict(numbers):
 
-if __name__ == '__main__':
-    # Load model
-    with open('classifier_model.pkl', 'rb') as f:
-        model = pickle.load(f)
-
-    app.run(debug=True)
-
-
-
-
-
-# load pickle model
-model = pickle.load(open("classifier_model.pkl", "rb"))
-
-@app.route("/predict", methods = {"POST"})
-
-def predict():
-    json_ = request.json
-    query_df = pd.DataFrame(json_)
-    predictions = model.predict(query_df)
-    return jsonify({"Prediction": list(predictions)})
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    req_data = request.get_json()
+    # extract numbers list from request payload
+    numbers = req_data['numbers']
+    # calculate the sum of the numbers
+    result = sum(numbers)
+    # create a dictionary containing the result
+    response = {'result': result}
+    # return the result as a JSON response
+    return jsonify(response)
 
 """
+
+
+if __name__ == '__main__':
+    app.run(debug = True)
