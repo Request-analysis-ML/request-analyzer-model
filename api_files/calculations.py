@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from df_functions import clean_reqlogs
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
@@ -67,9 +66,6 @@ def create_vectorizer(dataframe):
     vectorizer = vectorizer.fit(cleaned['request_logs'])
     return vectorizer
 
-
-
-
 """
 Function that returns the variance of different types of requests.
 The CountVectorizer have been applied to the request to perform a BoW operation.
@@ -86,9 +82,6 @@ def get_variance_score(dataframe, vectorizer):
 
     df_vectorized = pd.DataFrame(x.todense(), columns=vectorizer.get_feature_names_out())
     return df_vectorized.iloc[0].var()
-
-
-
 
 """
 Function that checks the average number of sessionIDs within 5 minute windows.
@@ -130,15 +123,30 @@ def count_sessionIDs(dataframe):
         return(len(set(timestamp_list)))
     return 0
 
+#Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
+def clean_reqlogs(dataframe):
 
+    df = dataframe[['userID','URL']].copy()
+    df = df.set_index(['userID']).rename_axis(None)
+    df = df.groupby(level=0).agg(','.join)
+
+    request_logs = df['URL']
+
+    cleaned_logs = []
+
+    for i in range(0, len(request_logs)):
+        sequence = re.sub('\d', '', request_logs[i])
+        sequence = re.sub(',', ' ', sequence)
+        sequence = sequence.lower()
+        cleaned_logs.append(sequence)
+
+    df['request_logs'] = cleaned_logs
+    df = df.drop('URL', axis=1)
+
+    return df 
 
 #Function to calculate unique requests (might not use)
 def count_unique_reqs(dataframe, list):
     dataframe['unique_reqs'] = np.count_nonzero(dataframe[list], axis=1)
     return dataframe
-
-
-
-
-
 

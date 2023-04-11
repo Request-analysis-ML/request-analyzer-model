@@ -30,27 +30,7 @@ def split_user_df(dataframe, user):
     return  np.array_split(user_data, partitions)
   
 
-#Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
-def clean_reqlogs(dataframe):
-
-    df = dataframe[['userID','URL']].copy()
-    df = df.set_index(['userID']).rename_axis(None)
-    df = df.groupby(level=0).agg(','.join)
-
-    request_logs = df['URL']
-
-    cleaned_logs = []
-
-    for i in range(0, len(request_logs)):
-        sequence = re.sub('\d', '', request_logs[i])
-        sequence = re.sub(',', ' ', sequence)
-        sequence = sequence.lower()
-        cleaned_logs.append(sequence)
-
-    df['request_logs'] = cleaned_logs
-    df = df.drop('URL', axis=1)
-
-    return df  
+ 
 
 
 
