@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, json
 import pandas as pd
 
 
@@ -23,7 +23,9 @@ def welcome():
 
 @app.route('/data', methods=['GET'])
 def print_data():
-    return data
+    dict = json.loads(data)
+    df = pd.DataFrame(dict)
+    return df.to_json(orient="records")
 
 
 @app.route('/numbers', methods=['POST'])

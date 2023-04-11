@@ -1,10 +1,21 @@
 import requests
+import pandas as pd
+from flask import json
+
 
 url = 'http://localhost:5000/numbers'
+#url = 'http://localhost:5000/data'
 
-#data = {'numbers': [1, 2, 3, 4, 5]}
+data = {'numbers': [1, 2, 3, 4, 5]}
 
-data = pd.read_csv
+#data = pd.read_csv('calculations.csv')
+#data_records = data.to_json(orient='records')
+#data_records = json.loads(data_records)
+
+#response= requests.post(url, json=data_records)
+#print(response)
+#response_result = json.dumps(response.json())
+#print(response_result)
 
 response = requests.post(url, json=data)
 
