@@ -27,7 +27,6 @@ ax.legend()
 plt.xticks(np.arange(15, 56, 10))
 # Display the plot
 plt.show()
-#This code will create a single plot with two graphs in it: one for y = sin(x) and another for y = cos(x). You can modify this code to plot your own data by replacing x, y1, and y2 with your own data arrays.
 
 
 
