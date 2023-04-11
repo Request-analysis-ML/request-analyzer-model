@@ -8,7 +8,8 @@ import pandas as pd
 app = Flask(__name__)
 
 
-data  = pd.read_csv('csv_files/datachunk.csv')
+#data  = pd.read_csv('csv_files/datachunk.csv')
+data = pd.read_csv('api_files/datachunk.csv')
 data = data.to_json(orient="records")
 
 @app.route('/anomaly', methods=['POST'])
