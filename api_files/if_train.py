@@ -1,7 +1,6 @@
 import pandas as pd
 from sklearn.ensemble import IsolationForest
-from df_functions import read_csv_file
-from calculations import create_vectorizer
+from ml_library import create_vectorizer, read_csv_file
 import pickle
 
 """Code for fetching the data"""

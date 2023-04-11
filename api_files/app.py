@@ -1,4 +1,4 @@
-from calculations import longest_consec, calc_avg_timediff, get_variance_score, avg_tokens_5mins, sequence_time_length
+from ml_library import longest_consec, calc_avg_timediff, get_variance_score, avg_tokens_5mins, sequence_time_length
 from flask import Flask, request
 import pickle
 import json

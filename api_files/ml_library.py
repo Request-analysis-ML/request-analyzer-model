@@ -1,13 +1,76 @@
 import numpy as np
 import pandas as pd
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.feature_extraction.text import  CountVectorizer
+import math
 
 
+
+# *** METHODS USED FOR DATAFRAME MANIPULATIONS ***
+
+#Function to read a csv file
+def read_csv_file(csv_file):
+    data = pd.read_csv(csv_file)
+    data.columns = ['timestamp', 'userID', 'sessionID', 'expiring', 'URL']
+    return data
+
+#Returns a list of users
+def extract_users(dataframe):
+    return list(dataframe['userID'].unique())
+
+
+#This function will only be used for training data
+def split_user_df(dataframe, user):
+
+    #Dataframe containing all requests made by chosen user
+    user_data = dataframe.loc[dataframe['userID'] == user]
+    number_of_reqs = user_data.shape[0]
+   
+    partitions = number_of_reqs/55
+    partitions = math.ceil(partitions)
+
+    #Splits the data frame into smaller chunks of ~50 requests
+    return  np.array_split(user_data, partitions)
+
+#Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
+def clean_reqlogs(dataframe):
+
+    df = dataframe[['userID','URL']].copy()
+    df = df.set_index(['userID']).rename_axis(None)
+    df = df.groupby(level=0).agg(','.join)
+
+    request_logs = df['URL']
+
+    cleaned_logs = []
+
+    for i in range(0, len(request_logs)):
+        sequence = re.sub('\d', '', request_logs[i])
+        sequence = re.sub(',', ' ', sequence)
+        sequence = sequence.lower()
+        cleaned_logs.append(sequence)
+
+    df['request_logs'] = cleaned_logs
+    df = df.drop('URL', axis=1)
+    return df 
+
+"""
+Function that returns a fitted CountVectorizer.
+The data is cleaned with clean_reqlogs before being fitted.
+:param dataframe: the dataframe to fit the vectorizer with
+:returns: a CountVectorizer
+"""
+def create_vectorizer(dataframe):
+    df = dataframe.copy()
+    cleaned = clean_reqlogs(df)
+    vectorizer = CountVectorizer()
+    vectorizer = vectorizer.fit(cleaned['request_logs'])
+    return vectorizer
+
+
+# ***FOLLOWING METHODS ARE USED FOR PERFORMING CALCULATIONS ON THE PROVIDED DATA**  
 
 """
 Function that checks the time between the requests in each chunk and calculates the mean.
-
 :param userdata: a chunk of data from a user 
 :returns: the average time between requests in seconds
 """
@@ -21,11 +84,8 @@ def calc_avg_timediff(userdata):
     
     return avg_ms/1000
 
-
-
 """
 Function that calculates the longest streak of consecutive requests.
-
 :param dataframe: the dataframe with a chunk of data from a user to analyze
 :returns: the number of longest streak with consecutive requests
 """
@@ -51,20 +111,6 @@ def recursive_consec(list, last_word, longest_streak, count, i):
         return float(longest_streak)
     return recursive_consec(list, list[i], longest_streak, count, i+1)
 
-
-"""
-Function that returns a fitted CountVectorizer.
-The data is cleaned with clean_reqlogs before being fitted.
-
-:param dataframe: the dataframe to fit the vectorizer with
-:returns: a CountVectorizer
-"""
-def create_vectorizer(dataframe):
-    df = dataframe.copy()
-    cleaned = clean_reqlogs(df)
-    vectorizer = CountVectorizer()
-    vectorizer = vectorizer.fit(cleaned['request_logs'])
-    return vectorizer
 
 """
 Function that returns the variance of different types of requests.
@@ -122,28 +168,6 @@ def count_sessionIDs(dataframe):
         timestamp_list = list.split(" ")
         return(len(set(timestamp_list)))
     return 0
-
-#Removing all non-letter characters from the data and assigning it to new data frame 'df_cleaned'
-def clean_reqlogs(dataframe):
-
-    df = dataframe[['userID','URL']].copy()
-    df = df.set_index(['userID']).rename_axis(None)
-    df = df.groupby(level=0).agg(','.join)
-
-    request_logs = df['URL']
-
-    cleaned_logs = []
-
-    for i in range(0, len(request_logs)):
-        sequence = re.sub('\d', '', request_logs[i])
-        sequence = re.sub(',', ' ', sequence)
-        sequence = sequence.lower()
-        cleaned_logs.append(sequence)
-
-    df['request_logs'] = cleaned_logs
-    df = df.drop('URL', axis=1)
-
-    return df 
 
 #Function to calculate unique requests (might not use)
 def count_unique_reqs(dataframe, list):
