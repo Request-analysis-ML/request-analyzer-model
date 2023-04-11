@@ -7,11 +7,6 @@ import pandas as pd
 
 app = Flask(__name__)
 
-
-#data  = pd.read_csv('csv_files/datachunk.csv')
-data = pd.read_csv('api_files/datachunk.csv')
-data = data.to_json(orient="records")
-
 @app.route('/anomaly', methods=['POST'])
 def detect_anomaly():
     req_data = json.loads(request.data)
@@ -38,19 +33,3 @@ if __name__ == '__main__':
     with open('vect.pickle', 'rb') as f:  
         vect = pickle.load(f)    
     app.run(debug=True ,port=8080,use_reloader=False)
-
-
-"""
-@app.route('/', methods=['GET'])
-def welcome():
-    return 'Hello!' 
-
-
-@app.route('/anomaly', methods=['GET'])
-def get_anomaly():
-    dict = json.loads(data)
-    df = pd.DataFrame(dict)
-    return df.to_json(orient="records")
-    #pred = model.predict(df)
-    #return jsonify(pred.tolist())
-    """
