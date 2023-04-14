@@ -12,6 +12,8 @@ def detect_anomaly():
     req_data = json.loads(request.data)
     df = pd.DataFrame(req_data)
 
+    #TODO add error in case too many requests are sent in
+
     data = {'request_freq': [calc_avg_timediff(df),],
             'avg_tokens': [avg_tokens_5mins(df),],
             'longest_consec': [longest_consec(df),],
