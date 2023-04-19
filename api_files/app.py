@@ -34,4 +34,4 @@ if __name__ == '__main__':
         model = pickle.load(f)
     with open('vect.pickle', 'rb') as f:  
         vect = pickle.load(f)    
-    app.run(debug=True ,port=8080,use_reloader=False)
+    app.run(debug=True, host= "0.0.0.0", port=5000,use_reloader=False)

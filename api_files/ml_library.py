@@ -26,7 +26,7 @@ def split_user_df(dataframe, user):
     user_data = dataframe.loc[dataframe['userID'] == user]
     number_of_reqs = user_data.shape[0]
    
-    partitions = number_of_reqs/80
+    partitions = number_of_reqs/50
     partitions = math.ceil(partitions)
 
     #Splits the data frame into smaller chunks of ~50 requests
@@ -95,7 +95,23 @@ def longest_consec(dataframe):
     requests = cleaned['request_logs'].to_list()[0]
     
     list = re.split(' ', requests)
-    return recursive_consec(list, list[0], 1, 1, 1)
+    last_word = list[0]
+    count = 0
+    longest_streak = 0
+    for i in range (0, len(list)):
+        if (list[i] == last_word and list[i] != ''):
+            count = count + 1
+        elif(list[i] != ''):
+            last_word = list[i]
+            if (count > longest_streak):
+                longest_streak = count 
+            count = 1  
+    return float(longest_streak)
+
+
+
+
+    #return recursive_consec(list, list[0], 1, 1, 1)
     
 
 #Function that calculates length of the longest subsequence of consecutive requests 
