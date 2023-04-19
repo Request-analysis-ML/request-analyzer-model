@@ -1,0 +1,14 @@
+#Command for building docker container:
+docker build . -f api_files/docker.Dockerfile -t ml_api
+
+#Command for viewing docker images:
+docker images
+
+#Command for running the docker image ml_api, gives the container ID
+docker run -d -p 5000:5000 ml_api
+
+#Command to list status of all docker images
+docker ps -a
+
+#Command to list the logs of a container
+docker logs <container ID>
