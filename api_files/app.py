@@ -21,6 +21,8 @@ def detect_anomaly():
             'sequence_time': [sequence_time_length(df),]}
     user_df = pd.DataFrame(data)
 
+    print(user_df)
+
     df_anomaly = pd.DataFrame()
     df_anomaly['anomaly_score'] = model.decision_function(user_df)
     df_anomaly['anomaly'] = model.predict(user_df)

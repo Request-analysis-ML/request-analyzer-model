@@ -28,11 +28,11 @@ df_a = df_anomaly.loc[df_anomaly['anomaly']==-1]
 print(df_a)
 
 # Save model
-with open('model.pickle', 'wb') as f:
+with open('api_files/model.pickle', 'wb') as f:
     pickle.dump(model, f)
 
 # Save model
-with open('vect.pickle', 'wb') as f:
+with open('api/files/vect.pickle', 'wb') as f:
     pickle.dump(vect, f)    
     
 
