@@ -3,7 +3,8 @@ import json
 import pandas as pd
 
 #host = 'http://127.0.0.1:8080/anomaly'
-host = 'http://127.0.0.1:5000/anomaly'
+#host = 'http://127.0.0.1:5000/anomaly'
+host = 'http://127.0.0.1:8090/anomaly'
 
 data = pd.read_csv('csv_files/datachunk.csv')
 body = data.to_json(orient="records")
