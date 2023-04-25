@@ -140,9 +140,10 @@ def get_variance_score(dataframe, vectorizer):
     df = dataframe.copy()
     cleaned = clean_reqlogs(df)
 
-    x = vectorizer.transform(cleaned['request_logs'])
+    x = vectorizer.fit_transform(cleaned['request_logs'])
 
-    df_vectorized = pd.DataFrame(x.todense(), columns=vectorizer.get_feature_names_out())
+    #df_vectorized = pd.DataFrame(x.todense(), columns=vectorizer.get_feature_names_out())
+    df_vectorized = pd.DataFrame(x.todense())
     return df_vectorized.iloc[0].var()
 
 """
