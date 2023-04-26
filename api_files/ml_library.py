@@ -108,26 +108,6 @@ def longest_consec(dataframe):
             count = 1  
     return float(longest_streak)
 
-
-
-
-    #return recursive_consec(list, list[0], 1, 1, 1)
-    
-
-#Function that calculates length of the longest subsequence of consecutive requests 
-def recursive_consec(list, last_word, longest_streak, count, i):
-    if (list[i] == ''  and i < len(list)):
-        return recursive_consec(list, last_word, longest_streak, count, i+1)
-    if (list[i] == last_word):
-        count = count + 1
-    elif (count > longest_streak):
-        longest_streak = count 
-        count = 1     
-    if(i == len(list)-1):
-        return float(longest_streak)
-    return recursive_consec(list, list[i], longest_streak, count, i+1)
-
-
 """
 Function that returns the variance of different types of requests.
 The CountVectorizer have been applied to the request to perform a BoW operation.
