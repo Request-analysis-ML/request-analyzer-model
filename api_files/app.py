@@ -32,13 +32,13 @@ def detect_anomaly():
   
 
 if __name__ == '__main__':
-    with open('api_files/model.pickle', 'rb') as f:  
+    with open('model.pickle', 'rb') as f:  
         model = pickle.load(f)
-    with open('api_files/vect.pickle', 'rb') as f:  
+    with open('vect.pickle', 'rb') as f:  
         vect = pickle.load(f)
 
     #Use this only when running api with the composer        
-    #app.run(debug=True, host= "172.20.0.41", port=8090,use_reloader=False) 
+    app.run(debug=True, host= "172.20.0.41", port=8090,use_reloader=False) 
     
     #Use this when running locally
-    app.run(debug=True, host= "0.0.0.0", port=8090,use_reloader=False)
+    #app.run(debug=True, host= "0.0.0.0", port=8090,use_reloader=False)

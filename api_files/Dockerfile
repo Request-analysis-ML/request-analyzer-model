@@ -6,9 +6,9 @@ COPY . /app
 EXPOSE 8090
 
 RUN pip install --upgrade pip
-RUN pip install -r api_files/requirements.txt
+RUN pip install -r requirements.txt
 
 ENTRYPOINT [ "python" ]
 
 
-CMD ["api_files/app.py"]
+CMD ["app.py"]
