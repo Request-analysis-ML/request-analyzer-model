@@ -101,12 +101,12 @@ def longest_consec(dataframe):
     for i in range (0, len(list)):
         if (list[i] == last_word and list[i] != ''):
             count = count + 1
-        elif(list[i] != ''):
+        elif(list[i] != last_word and list[i] != ''):
             last_word = list[i]
             if (count > longest_streak):
                 longest_streak = count 
-            count = 1  
-    return float(longest_streak)
+                count = 1
+    return float(max(longest_streak, count))
 
 """
 Function that returns the variance of different types of requests.
