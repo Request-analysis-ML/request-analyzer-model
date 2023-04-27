@@ -82,7 +82,7 @@ def calc_avg_timediff(userdata):
     #calculates the avarage in milliseconds
     avg_ms = np.average(np.diff(timestamps))
     
-    return avg_ms/1000
+    return abs(avg_ms/1000)
 
 """
 Function that calculates the longest streak of consecutive requests.
@@ -148,7 +148,7 @@ def avg_tokens_5mins(dataframe):
 #Calculates time difference between first and last request in a sequence
 def sequence_time_length(dataframe):
     timestamps = dataframe['timestamp'].to_list()
-    diff = (timestamps[len(timestamps)-1]) - timestamps[0]
+    diff = abs((timestamps[len(timestamps)-1]) - timestamps[0])
     diff = diff / 1000
     return diff
 
