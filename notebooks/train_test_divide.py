@@ -4,9 +4,9 @@ import pandas as pd
 
 #Function that extracts spammers and scrapers from original data set
 def extract_spammers_scrapers(dataframe):
-    return dataframe.loc[(dataframe['user'] == ' user-1003') | 
-                         (dataframe['user'] == ' user-1004') | 
-                         (dataframe['user'] == ' user-1005')]
+    return dataframe.loc[(dataframe['user'] == 'user-1003') | 
+                         (dataframe['user'] == 'user-1004') | 
+                         (dataframe['user'] == 'user-1005')]
 
 #Function that returns all normal users (used after extracting spammers and scrapers)
 def extract_normal(dataframe, df_spam):
