@@ -3,6 +3,7 @@ import pandas as pd
 import re
 from sklearn.feature_extraction.text import  CountVectorizer
 import math
+from urllib.parse import urlparse
 
 
 
@@ -37,6 +38,36 @@ def clean_reqlogs(dataframe):
 
     df = dataframe[['userID','URL']].copy()
     df = df.set_index(['userID']).rename_axis(None)
+
+    request_logs = df['URL']
+
+    cleaned_logs = []
+
+    for i in range(0, len(request_logs)):
+        sequence = request_logs[i]
+        cleaned_logs.append(cleanURL(sequence))
+
+    df['request_logs'] = cleaned_logs
+    df = df.groupby(level=0).agg(','.join)
+    df = df.drop('URL', axis=1)
+    return df 
+
+def cleanURL(s):
+    #parses the url string
+    result = urlparse(s)
+    nl = result.netloc
+    p = result.path
+    s = nl + p
+
+    s = re.sub('\d', '', s)
+    s = s.lower()
+    return s
+
+"""
+def clean_reqlogs(dataframe):
+
+    df = dataframe[['userID','URL']].copy()
+    df = df.set_index(['userID']).rename_axis(None)
     df = df.groupby(level=0).agg(','.join)
 
     request_logs = df['URL']
@@ -51,7 +82,8 @@ def clean_reqlogs(dataframe):
 
     df['request_logs'] = cleaned_logs
     df = df.drop('URL', axis=1)
-    return df 
+    return df
+"""     
 
 """
 Function that returns a fitted CountVectorizer.
