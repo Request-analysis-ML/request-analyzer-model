@@ -57,8 +57,16 @@ def cleanURL(s):
     result = urlparse(s)
     nl = result.netloc
     p = result.path
-    s = nl + p
 
+    #tries to recognize identifier in case non-numerical, update regular expression if needed
+    pattern = r"/(?P<action>\w+)/(?P<id>\w+)"
+    match = re.match(pattern, p)
+
+    if match:
+        action = match.group("action")
+        p = action
+
+    s = nl + p
     s = re.sub('\d', '', s)
     s = s.lower()
     return s
@@ -126,7 +134,7 @@ def longest_consec(dataframe):
     cleaned = clean_reqlogs(df)
     requests = cleaned['request_logs'].to_list()[0]
     
-    list = re.split(' ', requests)
+    list = re.split(',', requests)
     last_word = list[0]
     count = 0
     longest_streak = 0
