@@ -6,11 +6,12 @@ from sklearn.feature_extraction.text import HashingVectorizer
 
 """Code for fetching the data"""
 #Fetch data from csv file and create a fitted vectorizer
-data = read_csv_file('csv_files/requests.csv')
+#data = read_csv_file('csv_files/requests.csv')
 #vect = create_vectorizer(data)
 
 #using the HashVectorizer instead. Here we dont use the function create_vectorizer 
 vect_hash = HashingVectorizer(norm=None, alternate_sign=False)
+
 
 train_data = pd.read_csv('csv_files/train.csv')
 test_data = pd.read_csv('csv_files/test.csv')
