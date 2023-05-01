@@ -52,6 +52,7 @@ def clean_reqlogs(dataframe):
     df = df.drop('URL', axis=1)
     return df 
 
+#Removes unwanted information from the URL-string
 def cleanURL(s):
     #parses the url string
     result = urlparse(s)
@@ -67,6 +68,8 @@ def cleanURL(s):
         p = action
 
     s = nl + p
+
+    #this removes all numbers in the path (in case the identifier IS numerical)
     s = re.sub('\d', '', s)
     s = s.lower()
     return s
