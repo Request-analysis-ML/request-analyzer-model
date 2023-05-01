@@ -28,6 +28,8 @@ def detect_anomaly():
     df_anomaly['anomaly'] = model.predict(user_df)
     df_anomaly['user'] = df['userID'].iloc[0]
 
+    #TODO make an assessment whether a user shows abnormal, uncertain or normal behaviour  
+
     return df_anomaly.to_json(orient='index')
   
 
