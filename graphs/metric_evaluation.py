@@ -19,8 +19,8 @@ ax.plot(x, y_F1, label='F1 score')
 
 
 # Add labels and legend
-ax.set_xlabel('Batch size')
-ax.set_ylabel('Score [%]')
+ax.set_xlabel('Sequence length')
+ax.set_ylabel('Score')
 ax.set_title('Results')
 ax.legend()
 
