@@ -1,32 +1,32 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-"""
+
 # Generate some data
-x = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
-y_precision = [0.9986, 0.9983, 0.9997, 1.000, 0.9996, 0.9995, 0.9995, 1.000, 1.000, 1.000, 1.000]
-y_recall = [0.2147, 0.2595, 0.5050, 0.5405, 0.5563, 0.6259, 0.5967, 0.7804, 0.8364, 0.8130, 0.9933]
-y_accuracy = [0.6066, 0.6286, 0.7521, 0.7703, 0.7776, 0.8126, 0.7977, 0.8902, 0.9182, 0.9065, 0.9967]
-y_F1 = [0.3534, 0.4119, 0.6710, 0.7017, 0.7148, 0.7698, 0.7470, 0.8767, 0.9109, 0.8969, 0.9966] 
+x = [10, 20, 30, 40, 50, 60, 70, 80 ]
+y_precision = [0.9980, 0.9997, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000]
+y_recall = [0.1488, 0.4690, 0.5246, 0.6247, 0.8371, 0.9747, 0.9984, 1.0000]
+y_accuracy = [0.5737, 0.7341, 0.7623, 0.8124, 0.9186, 0.9874, 0.9992, 1.0000]
+y_F1 = [0.2589, 0.6384, 0.6881, 0.7690, 0.9113, 0.9873, 0.9992, 1.0000] 
 
 
 # Create a figure and axes objects
 fig, ax = plt.subplots()
 
 # Plot the data
-ax.plot(x, y_precision, label='Precision')
-ax.plot(x, y_recall, label='Recall')
-ax.plot(x, y_accuracy, label='Balanced accuracy')
-ax.plot(x, y_F1, label='F1 score')
+ax.plot(x, y_precision, '#069AF3', label='Precision')
+ax.plot(x, y_recall, '#030764', label='Recall')
+ax.plot(x, y_accuracy, '#029386', label='Balanced accuracy')
+ax.plot(x, y_F1, '#C875C4', label='F1 score')
 
 
 # Add labels and legend
 ax.set_xlabel('Sequence length')
 ax.set_ylabel('Score')
-ax.set_title('Result with adjusted features')
+ax.set_title('Result: Sequence length comparison')
 ax.legend()
-"""
 
+"""
 
 # Adjusted result
 x = [10, 20, 30, 40, 50, 60]
@@ -53,8 +53,10 @@ ax.set_xlabel('Sequence length')
 ax.set_ylabel('Score')
 ax.set_title('Result with adjusted features')
 ax.legend()
+"""
 
-plt.xticks(np.arange(10, 61, 10))
+
+plt.xticks(np.arange(10, 81, 10))
 # Display the plot
 plt.show()
 

@@ -24,8 +24,8 @@ def detect_anomaly():
     print(user_df)
 
     df_anomaly = pd.DataFrame()
-    df_anomaly['anomaly_score'] = model.decision_function(user_df)
-    df_anomaly['anomaly'] = model.predict(user_df)
+    df_anomaly['anomaly_score'] = model.decision_function(user_df.values)
+    df_anomaly['anomaly'] = model.predict(user_df.values)
     df_anomaly['user'] = df['userID'].iloc[0]
 
     #TODO make an assessment whether a user shows abnormal, uncertain or normal behaviour  

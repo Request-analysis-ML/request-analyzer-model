@@ -30,3 +30,15 @@ def split_train_test(df_normal, df_spam):
 
     df_train.to_csv('csv_files/train.csv', index=False) 
     df_test.to_csv('csv_files/test.csv', index=False)
+
+#Function for labelling data
+def label_data(dataframe):
+    labels = []
+    for i in range (0, dataframe.shape[0]):
+        instance = dataframe.iloc[i]
+        if (instance['user'] == 'user-1003' or instance['user'] == 'user-1004' or instance['user'] == 'user-1005'):
+            labels.append(-1)
+        else:
+            labels.append(1)
+    dataframe['label'] = labels
+    return dataframe    
