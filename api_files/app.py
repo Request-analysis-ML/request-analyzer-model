@@ -12,6 +12,9 @@ def detect_anomaly():
     req_data = json.loads(request.data)
     df = pd.DataFrame(req_data)
 
+    seq_length = df.shape[0]
+    user = df.loc[0,'userID']
+
     #TODO add error in case too many requests are sent in
 
     data = {'request_freq': [calc_avg_timediff(df),],
@@ -19,28 +22,36 @@ def detect_anomaly():
             'longest_consec': [longest_consec(df),],
             'var_score': [get_variance_score(df, vect),],
             'sequence_time': [sequence_time_length(df),]}
-    user_df = pd.DataFrame(data)
+    
+    user_df = pd.DataFrame(data) 
 
-    print(user_df)
+    #Short sequences
+    if (seq_length < 40):
+        model = pickle.load(open('api_files/model30.pickle', 'rb'))
+        anomaly_score = model.decision_function(user_df.values)
+        if (anomaly_score < 0):
+            df_anomaly = pd.DataFrame({'user':[user], 'action':['verify']})
 
-    df_anomaly = pd.DataFrame()
-    df_anomaly['anomaly_score'] = model.decision_function(user_df.values)
-    df_anomaly['anomaly'] = model.predict(user_df.values)
-    df_anomaly['user'] = df['userID'].iloc[0]
+        else:
+            df_anomaly = pd.DataFrame({'user':[user], 'action':['OK']})
+    #Long sequences
+    else:  
+        model = pickle.load(open('api_files/model60.pickle', 'rb'))      
+        anomaly_score = model.decision_function(user_df.values)
+        if (anomaly_score < 0):
+            df_anomaly = pd.DataFrame({'user':[user], 'action':['block']})
+        else:
+            df_anomaly = pd.DataFrame({'user':[user], 'action':['OK']})
+    
+    return df_anomaly.to_json(orient='records') 
 
-    #TODO make an assessment whether a user shows abnormal, uncertain or normal behaviour  
 
-    return df_anomaly.to_json(orient='index')
-  
-
-if __name__ == '__main__':
-    with open('model.pickle', 'rb') as f:  
-        model = pickle.load(f)
-    with open('vect.pickle', 'rb') as f:  
+if __name__ == '__main__':    
+    with open('api_files/vect.pickle', 'rb') as f:  
         vect = pickle.load(f)
 
     #Use this only when running api with the composer        
-    app.run(debug=True, host= "172.20.0.41", port=8090,use_reloader=False) 
+    #app.run(debug=True, host= "172.20.0.41", port=8090,use_reloader=False) 
     
     #Use this when running locally
-    #app.run(debug=True, host= "0.0.0.0", port=8090,use_reloader=False)
+    app.run(debug=True, host= "0.0.0.0", port=8090,use_reloader=False)

@@ -15,19 +15,24 @@ def read_csv_file(csv_file):
     data.columns = ['timestamp', 'userID', 'sessionID', 'expiring', 'URL']
     return data
 
+#Function for removing spaces in original dataset
+def trim(dataset):
+    trim = lambda x: x.strip() if type(x) is str else x
+    return dataset.applymap(trim)
+
 #Returns a list of users
 def extract_users(dataframe):
     return list(dataframe['userID'].unique())
 
 
 #This function will only be used for training data
-def split_user_df(dataframe, user):
+def split_user_df(dataframe, user, n):
 
     #Dataframe containing all requests made by chosen user
     user_data = dataframe.loc[dataframe['userID'] == user]
     number_of_reqs = user_data.shape[0]
    
-    partitions = number_of_reqs/80
+    partitions = number_of_reqs/n
     partitions = math.ceil(partitions)
 
     #Splits the data frame into smaller chunks of ~50 requests

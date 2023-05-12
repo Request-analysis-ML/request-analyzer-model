@@ -2,6 +2,7 @@ import requests
 import json
 import pandas as pd
 
+
 #host = 'http://127.0.0.1:8080/anomaly'
 #host = 'http://127.0.0.1:5000/anomaly'
 host = 'http://127.0.0.1:8090/anomaly'
@@ -13,4 +14,7 @@ body = json.loads(body)
 response_code = requests.post(host, json=body)
 print(response_code)
 response_result = json.dumps(response_code.json())
+#response_result = pd.DataFrame(response_code.json())
+
+
 print(response_result)
