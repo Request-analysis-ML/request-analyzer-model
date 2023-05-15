@@ -13,8 +13,9 @@ body = json.loads(body)
 
 response_code = requests.post(host, json=body)
 print(response_code)
-response_result = json.dumps(response_code.json())
-#response_result = pd.DataFrame(response_code.json())
-
-
-print(response_result)
+if(response_code == 200):
+    response_result = json.dumps(response_code.json())
+    #response_result = pd.DataFrame(response_code.json())
+    print(response_result)
+else:
+    print(response_code.content)

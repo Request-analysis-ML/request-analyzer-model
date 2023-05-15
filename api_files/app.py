@@ -1,11 +1,13 @@
 from ml_library import longest_consec, calc_avg_timediff, get_variance_score, avg_tokens_5mins, sequence_time_length
-from flask import Flask, request
+from flask import Flask, request, abort
 import pickle
 import json
 import pandas as pd
 
 
+
 app = Flask(__name__)
+
 
 @app.route('/anomaly', methods=['POST'])
 def detect_anomaly():
@@ -15,15 +17,19 @@ def detect_anomaly():
     seq_length = df.shape[0]
     user = df.loc[0,'userID']
 
-    #TODO add error in case too many requests are sent in
+    if(seq_length < 20 or seq_length > 70):
+        abort(400, 'Sequence length not within permitted interval')
 
-    data = {'request_freq': [calc_avg_timediff(df),],
-            'avg_tokens': [avg_tokens_5mins(df),],
-            'longest_consec': [longest_consec(df),],
-            'var_score': [get_variance_score(df, vect),],
-            'sequence_time': [sequence_time_length(df),]}
-    
-    user_df = pd.DataFrame(data) 
+    try:
+        data = {'request_freq': [calc_avg_timediff(df),],
+                'avg_tokens': [avg_tokens_5mins(df),],
+                'longest_consec': [longest_consec(df),],
+                'var_score': [get_variance_score(df, vect),],
+                'sequence_time': [sequence_time_length(df),]}
+        user_df = pd.DataFrame(data)
+    except:
+        abort(400, 'Unpermitted data format')
+     
 
     #Short sequences
     if (seq_length < 40):
@@ -34,6 +40,7 @@ def detect_anomaly():
 
         else:
             df_anomaly = pd.DataFrame({'user':[user], 'action':['OK']})
+    
     #Long sequences
     else:  
         model = pickle.load(open('api_files/model60.pickle', 'rb'))      
