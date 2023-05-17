@@ -33,8 +33,7 @@ def detect_anomaly():
 
     #Short sequences
     if (seq_length < 40):
-        model = pickle.load(open('api_files/model30.pickle', 'rb'))
-        anomaly_score = model.decision_function(user_df.values)
+        anomaly_score = model30.decision_function(user_df.values)
         if (anomaly_score < 0):
             df_anomaly = pd.DataFrame({'user':[user], 'action':['verify']})
 
@@ -42,9 +41,8 @@ def detect_anomaly():
             df_anomaly = pd.DataFrame({'user':[user], 'action':['OK']})
     
     #Long sequences
-    else:  
-        model = pickle.load(open('api_files/model60.pickle', 'rb'))      
-        anomaly_score = model.decision_function(user_df.values)
+    else:      
+        anomaly_score = model60.decision_function(user_df.values)
         if (anomaly_score < 0):
             df_anomaly = pd.DataFrame({'user':[user], 'action':['block']})
         else:
@@ -54,11 +52,15 @@ def detect_anomaly():
 
 
 if __name__ == '__main__':    
-    with open('api_files/vect.pickle', 'rb') as f:  
+    with open('vect.pickle', 'rb') as f:  
         vect = pickle.load(f)
+    with open('model30.pickle', 'rb') as f:
+        model30 = pickle.load(f)
+    with open('model60.pickle', 'rb') as f:
+        model60 = pickle.load(f)    
 
     #Use this only when running api with the composer        
-    #app.run(debug=True, host= "172.20.0.41", port=8090,use_reloader=False) 
+    app.run(debug=True, host= "172.20.0.41", port=8090,use_reloader=False) 
     
     #Use this when running locally
-    app.run(debug=True, host= "0.0.0.0", port=8090,use_reloader=False)
+    #app.run(debug=True, host= "0.0.0.0", port=8090,use_reloader=False)
